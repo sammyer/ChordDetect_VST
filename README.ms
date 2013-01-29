@@ -1,4 +1,4 @@
-* Chord Detect VST
+# Chord Detect VST
 
 This is a VST plugin that displays the current chord being played
 
