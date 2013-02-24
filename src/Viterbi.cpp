@@ -3,6 +3,7 @@
 #include "Viterbi.h"
 #include <cstdio>
 
+
 Viterbi::Viterbi()
 {
 	int i;
@@ -33,7 +34,7 @@ float Viterbi::getTransProb(int chordLen, int prevChordLen) {
 
 	if (chordLen<8) prob*=chordLen/8.0;
 
-	return prob;
+	return 0.75;
 }
 
 int Viterbi::viterbi(float *bassChroma, float *midChroma) {

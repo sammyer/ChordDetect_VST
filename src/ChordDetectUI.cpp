@@ -1,5 +1,13 @@
 #include "ChordDetectUI.h"
 
+/*
+#include <iostream>
+#include <fstream>
+using namespace std;
+ofstream logfile("log.txt");
+*/
+
+
 ChordDetectUI::ChordDetectUI(AudioEffect *effect)
  : AEffGUIEditor (effect)
 {
@@ -12,6 +20,8 @@ ChordDetectUI::ChordDetectUI(AudioEffect *effect)
 	rect.top    = 0;
 	rect.right  = (short)bgBmp->getWidth ();
 	rect.bottom = (short)bgBmp->getHeight ();
+
+	viewRect=CRect(0,0,800,600);
 	//rect.right  = 155;
 	//rect.bottom = 155;
 	strcpy(curChord,"");
@@ -53,12 +63,19 @@ void ChordDetectUI::updateChord(const char *newChord) {
 	strcpy(curChord,newChord);
 	if (!frame) return;
 	chordText->setText(newChord);
-	CRect size;
-	frame->getSize(size);
-	frame->invalidate(size);
-}
+	CRect frameRect;
+	frame->getSize(frameRect);
 
-// void ChordDetectUI::valueChanged (CDrawContext* context, CControl* control) {}
+	//there seems to be a bug that if the view is dragged around, it no longer updates since the elements are no longer inside the view
+	//a fix
+	//if view rectangle has changed update
+	if (frameRect.left<viewRect.left) viewRect.left=frameRect.left;
+	if (frameRect.top<viewRect.top) viewRect.top=frameRect.top;
+	if (frameRect.right>viewRect.right) viewRect.right=frameRect.right;
+	if (frameRect.bottom>viewRect.bottom) viewRect.bottom=frameRect.bottom;
+
+	frame->invalidate(viewRect);
+}
 
 //-----------------------------------------------------------------------------
 void ChordDetectUI::close ()

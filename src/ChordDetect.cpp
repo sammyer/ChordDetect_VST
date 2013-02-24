@@ -79,6 +79,7 @@ void ChordDetect::setSampleRate (float sampleRate) {
 	fftSampleRate=sampleRate/sampleIncrement;
 }
 //---------------------------------------------------------------------------
+
 void ChordDetect::processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames) {
 	outputs=inputs;
 

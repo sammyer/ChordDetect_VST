@@ -22,6 +22,7 @@ class ChordDetectUI : public AEffGUIEditor//, public CControlListener
 		// Bitmap
 		CBitmap* bgBmp;
 		CTextLabel* chordText;
+		CRect viewRect;
 		char curChord[64];
 };
 
