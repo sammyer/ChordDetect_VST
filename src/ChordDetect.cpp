@@ -6,6 +6,7 @@
 #include <fstream>
 #include "fft.h"
 #include "PeakFinder.h"
+#include "Chord.h"
 
 //std::ofstream logger;
 
@@ -88,8 +89,7 @@ void ChordDetect::processReplacing (float** inputs, float** outputs, VstInt32 sa
 	float bassChroma[12];
 	float midChroma[12];
 	std::vector<float> spec;
-	int chordId, noteId, typeId;
-	std::string chordStr;
+	Chord chord;
 
 	for (i=0;i<sampleFrames;i+=sampleIncrement) {
 		buffer[bufferWriteIdx]=inputs[0][i];
@@ -99,12 +99,8 @@ void ChordDetect::processReplacing (float** inputs, float** outputs, VstInt32 sa
 		if (bufferWriteIdx==bufferReadIdx) {
 			spec=fft->windowed_fft(buffer,bufferReadIdx,bufferSize);
 			peakFinderModule.getChromas(bassChroma,midChroma,spec,fftSampleRate);
-			chordId=viterbiModule.viterbi(bassChroma,midChroma);
-			noteId=chordId%12;
-			typeId=chordId/12;
-			chordStr=noteNames[noteId];
-			chordStr+=chordNames[typeId];
-			((ChordDetectUI *)editor)->updateChord(chordStr.c_str());
+			chord=viterbiModule.viterbi(bassChroma,midChroma);
+			((ChordDetectUI *)editor)->updateChord(chord.getChordName().c_str());
 			isUpdated=true;
 			bufferReadIdx+=hopSize;
 			bufferReadIdx%=bufferSize;

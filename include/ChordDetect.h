@@ -7,10 +7,6 @@
 #include "Viterbi.h"
 #include <fstream>
 
-const char chordNames[5][4]={"","m","dim","aug","sus"};
-const char noteNames[12][3]={"C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"};
-
-
 class ChordDetect : public AudioEffectX {
 	public:
 		ChordDetect (audioMasterCallback audioMaster);

@@ -14,6 +14,7 @@ PeakFinder::~PeakFinder()
 	//dtor
 }
 
+// to sort peaks based on amplitude
 bool peakCompare (Peak const obj1, Peak const obj2) {
 	return obj1.amp<obj2.amp;
 }
@@ -73,6 +74,9 @@ std::vector<Peak> PeakFinder::findPeaks(std::vector<float> spec) {
 }
 
 void PeakFinder::pruneMaxes(std::vector<Peak> peakArr,float semiDist,float minAmpRatio) {
+	//Prunes peaks in peakArr to avoid peaks with low amplitude or close to other peaks
+	//Results are overwritten in peakArr and vector is resized
+
 	//prunes peaks as follow:
 	//semiDist - peaks must be at least semiDist semitones apart
 	//ampDiff - peak amp must be >max(peak.amp)*minAmpRatio
@@ -127,6 +131,7 @@ void PeakFinder::pruneMaxes(std::vector<Peak> peakArr,float semiDist,float minAm
 	peakArr.resize(peaksKept);
 }
 
+//Introduce error penalty if peak is between chromogram bins (standard A440 tuning is assumed)
 float PeakFinder::errorPenalty(float errorAmt) {
 	//return cos(errorAmt*PI)
 	float abserr=fabs(errorAmt);
@@ -134,7 +139,10 @@ float PeakFinder::errorPenalty(float errorAmt) {
 	else return 1.0;
 }
 
-
+//Returns bass and mid chromograms based on spectrogram provided
+//Chroma arrays represents notes from C, C#, ... to B
+//Base chromogram is in range from F1 to F3
+//Mid chromogram is in range from F3 to F5
 void PeakFinder::getChromas(float bassChroma[], float midChroma[],std::vector<float> spec,float sampleRate) {
 	//float chroma[2][12];
 	int i;
@@ -148,10 +156,6 @@ void PeakFinder::getChromas(float bassChroma[], float midChroma[],std::vector<fl
 	int pitchId; //where 0=C 1=C# ... 11=B
 	float tuningError;
 
-	//precalculate these 2 values
-	float n1=sampleRate/windowSize/440.0;
-	float n2=12.0/LOG2;
-
 	peakArr=findPeaks(spec);
 	pruneMaxes(peakArr,0.4,0.002);
 	//printf("%d, ",numPeaks);
@@ -162,7 +166,12 @@ void PeakFinder::getChromas(float bassChroma[], float midChroma[],std::vector<fl
 	}
 
 	numPeaks=peakArr.size();
+	//precalculate these 2 values
+	float n1=sampleRate/windowSize/440.0;
+	float n2=12.0/LOG2;
+
 	for (i=0;i<numPeaks;i++) {
+		//convert bin index into note
 		//semitones from A440 = log2(fq*fsamp/windowsize)*12
 		semis=log(peakArr[i].fq*n1)*n2;
 		if (semis>=-40&&semis<-16) chromaId=0; //bass

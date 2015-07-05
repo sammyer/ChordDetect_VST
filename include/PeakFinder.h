@@ -5,9 +5,9 @@
 #include <vector>
 
 struct Peak {
-	float fq;
+	float fq; //frequency in bin index
 	float amp;
-	Peak() : fq(), amp() {}
+	Peak() : fq(0), amp(0) {}
 	Peak(float fq, float amp) : fq(fq), amp(amp) {}
 };
 
@@ -18,9 +18,9 @@ class PeakFinder
 	public:
 		PeakFinder();
 		void getChromas(float bassChroma[], float midChroma[],std::vector<float> spec,float sampleRate);
+		std::vector<Peak> findPeaks(std::vector<float> spec);
 		virtual ~PeakFinder();
 	protected:
-		std::vector<Peak> findPeaks(std::vector<float> spec);
 		Peak quadSpline(float yprev,float y0,float ynext);
 	private:
 		void pruneMaxes(std::vector<Peak> peakArr,float semiDist,float minAmpRatio);

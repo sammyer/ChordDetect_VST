@@ -6,11 +6,8 @@
 
 Viterbi::Viterbi()
 {
-	int i;
-	for (i=0;i<60;i++) {
+	for (int i=0;i<NUM_CHORDS;i++) {
 		pathProbs[i]=1.0;
-		pathChordLengths[i][0]=0;
-		pathChordLengths[i][1]=0;
 	}
 	//ctor
 }
@@ -20,31 +17,24 @@ Viterbi::~Viterbi()
 	//dtor
 }
 
-float Viterbi::getTransProb(int chordLen, int prevChordLen) {
-	int chordLenDiff;
-	float prob;
-
-	chordLenDiff=fabs(chordLen-prevChordLen);
-	if (chordLen==0&&prevChordLen==0) return 1.0;
-
-	//if (chordLenDiff==0) prob=0.7;
-	//else if (chordLenDiff==1) prob=0.5;
-	//else prob=0.15;
-	prob=0.3;
-
-	if (chordLen<8) prob*=chordLen/8.0;
-
-	return 0.75;
+/*
+Returns probability of transitioning from one chord to another
+After experimentation, this is dependent only on whether the chord is the same as the previous chord
+*/
+float Viterbi::getTransProb(int prevChordId, int newChordId) {
+	//in order for probabilities to sum to one, if chords are the same, the probability of not transitioning is assigned
+	//if chords are different, the probability of transitioning is divided among all different chords
+	if (prevChordId==newChordId) return 0.25;
+	else return 0.75/(NUM_CHORDS-1);
 }
 
-int Viterbi::viterbi(float *bassChroma, float *midChroma) {
+Chord Viterbi::viterbi(float *bassChroma, float *midChroma) {
 	//paths=[-1,0,0,0]
-	int pathIdx,chordIdx;
-	float chordProbs[60];
-	float prevPathProbs[60];
-	float transMtx[60][60];
-	float transProb;
-	float chordTransProb;
+	int prevChordIdx,chordIdx;
+	float chordProbs[NUM_CHORDS];
+	float prevChordProbs[NUM_CHORDS];
+	float chordTransitionProb;
+	float logTransProb;
 
 	float prob;
 	int maxPathProbIdx;
@@ -54,112 +44,121 @@ int Viterbi::viterbi(float *bassChroma, float *midChroma) {
 
 	getChordProbs(bassChroma,midChroma,chordProbs);
 
-	//adjust chord probabilities for each path according to transition probabilities
-	//i.e. more likely if chord is same as previous chord
-	for (pathIdx=0;pathIdx<60;pathIdx++) {
-		transProb=getTransProb(pathChordLengths[pathIdx][0],pathChordLengths[pathIdx][1]);
-		for (chordIdx=0;chordIdx<60;chordIdx++) {
-			if (pathIdx==chordIdx) chordTransProb=1.0-transProb;
-			else chordTransProb=transProb/59.0;
-			transMtx[pathIdx][chordIdx]=chordTransProb*chordProbs[chordIdx];
-		}
-		normalize(transMtx[pathIdx],60);
-	}
+	for (prevChordIdx=0;prevChordIdx<NUM_CHORDS;prevChordIdx++) prevChordProbs[prevChordIdx]=pathProbs[prevChordIdx];
 
-	for (pathIdx=0;pathIdx<60;pathIdx++) prevPathProbs[pathIdx]=pathProbs[pathIdx];
-
+	//update each chord probability value with the maximum possible value according to viterbi algorithm
 	maxProb=0.0;
 	maxProbIdx=-1;
-	for (chordIdx=0;chordIdx<60;chordIdx++) {
+	for (chordIdx=0;chordIdx<NUM_CHORDS;chordIdx++) {
 		maxPathProbIdx=-1;
 		maxPathProb=0.0;
-		for (pathIdx=0;pathIdx<60;pathIdx++) {
-			if (transMtx[pathIdx][chordIdx]<=0.0) prob=prevPathProbs[pathIdx]-100.0;
-			else prob=pathProbs[pathIdx]+log(transMtx[pathIdx][chordIdx]);
-			if (pathIdx==0||prob>maxPathProb) {
+		for (prevChordIdx=0;prevChordIdx<NUM_CHORDS;prevChordIdx++) {
+			chordTransitionProb=getTransProb(prevChordIdx,chordIdx)*chordProbs[chordIdx];
+
+			if (chordTransitionProb<=0.0) logTransProb=-100.0;
+			else logTransProb=log(chordTransitionProb);
+			prob=prevChordProbs[prevChordIdx]+logTransProb;
+
+			if (prevChordIdx==0||prob>maxPathProb) {
 				maxPathProb=prob;
-				maxPathProbIdx=pathIdx;
+				maxPathProbIdx=prevChordIdx;
 			}
 		}
 		pathProbs[chordIdx]=maxPathProb;
-		if (maxPathProbIdx==chordIdx) { //same chord as before
-			pathChordLengths[chordIdx][0]++;
-		}
-		else { //new chord
-			pathChordLengths[chordIdx][1]=pathChordLengths[chordIdx][0];
-			pathChordLengths[chordIdx][0]=1;
-		}
+
 		if (chordIdx==0||maxPathProb>maxProb) {
 			maxProb=maxPathProb;
 			maxProbIdx=chordIdx;
 		}
 	}
 
-	return maxProbIdx;
+	Chord chord=maxProbIdx;
+	return chord;
 }
 
-bool Viterbi::normalize(float *chroma,int n) {
-	//normalizes chroma so sum of chroma==1
-	//if all vals=0 set chroma to array of 1/12 and return 0
-	//else return 1
+bool Viterbi::normalize(float *arr,int arraySize) {
+	//normalizes array in-place so sum is 1.  Returns false if normalization fails
+	//
+	// If normalization fails (i.e. the sum of values is 0), values are all set to 1/arraySize
+
 	int i;
 	float total=0.0;
 
-	for (i=0;i<n;i++) total+=chroma[i];
+	for (i=0;i<arraySize;i++) total+=arr[i];
 	if (total==0) {
-		for (i=0;i<n;i++) chroma[i]=1.0/n;
+		float val=1.0/arraySize;
+		for (i=0;i<arraySize;i++) arr[i]=val;
 		return false;
 	}
 	else {
-		for (i=0;i<n;i++) chroma[i]/=total;
+		for (i=0;i<arraySize;i++) arr[i]/=total;
 		return true;
 	}
 }
 
 // ------------- bass chroma -----------------
+// Given bass chroma, finds probability that each note is the root and places it in rootProbs array
+// rootProbs and chroma are arrays of size 12, each value representing one note of chromagram
 void Viterbi::getRootProbs(float *chroma, float *rootProbs) {
-	//finds probability that each note is the root and places it in rootProbs array
 
 	int i;
-	int tableIdx[12];
-	float chromaTotal=0.0;
 	bool success;
+
+	int normalizedChromaVals[12];
+	int chromaRootVal;
+	int chromaFifthVal;
 
 	success=normalize(chroma,12);
 	if (!success) {
+		//chroma is empty, return equal probabilities
 		for (i=0;i<12;i++) rootProbs[i]=1.0/12.0;
 		return;
 	}
 
+	//convert normalized chroma from 0...1 real scale to integer scale from 0 to 10
+	//these values are the indexes of the lookup table for bass probabilities
 	for (i=0;i<12;i++) {
-		tableIdx[i]=(int)ceil(10*chroma[i]/chromaTotal);
+		normalizedChromaVals[i]=(int)ceil(10*chroma[i]);
 	}
 	for (i=0;i<12;i++) {
-		rootProbs[i]=bassProbTable[tableIdx[i]][tableIdx[(i+7)%12]];
+		chromaRootVal=normalizedChromaVals[i];
+		chromaFifthVal=normalizedChromaVals[(i+7)%12];
+		//get the probability from a lookup table given the chroma values of the root and fifth
+		//where i is the root index
+		rootProbs[i]=bassProbTable[chromaRootVal][chromaFifthVal];
 	}
 	normalize(rootProbs,12);
 }
 
 // ------------------ mid chroma ----------------------
-float Viterbi::getMidChordProb(float *chroma, int chordTypeId, int noteNum) {
-	//finds probability of chord with root note noteNum and type chordTypeId
+float Viterbi::getMidChordProb(float *chroma, Chord chord) {
+	//finds probability of chord with root note chordRootId and type chordTypeId
 	//by finding the product pdf values of each of the 12 pitches for that chord
+	//pdf is sum of 2 Gaussian curves.  Parameters for pdf are stored in a lookup table
+	//These parameters were learned from machine learning.  There is another lookup table
+	//for empty chroma bins (whose value approaches zero)
+
+	int chordTypeId=chord.getChordTypeId();
+	int chordRootId=chord.getChordRootId();
 
 	float prob=1.0;
-	int i;
-	int j;
+	int interval; //in semis, i.e. 0=root 1==minor second, 2=major second, 3=minor third, 4=major third ... up to 11
+	int noteId;
 	float x,y,mu,sigma,d,a1,a2;
 
-	for (i=0;i<12;i++) {
-		j=(i+noteNum)%12;
-		x=chroma[j];
-		if (x<0.01) y=chordZeroTable[chordTypeId][i];
+	for (interval=0;interval<12;interval++) {
+		noteId=(chordRootId+interval)%12;
+		x=chroma[noteId];
+		if (x<0.01) y=chordZeroTable[chordTypeId][interval];
 		else {
-			a1=chordGaussTable[chordTypeId][i][0];
-			mu=chordGaussTable[chordTypeId][i][1];
-			sigma=chordGaussTable[chordTypeId][i][2];
-			a2=chordGaussTable[chordTypeId][i][3];
+			//get parameters (amplitude, mean, standard dev) - a2 is for 2nd gaussian with fixed deviation
+			a1=chordGaussTable[chordTypeId][interval][0];
+			mu=chordGaussTable[chordTypeId][interval][1];
+			sigma=chordGaussTable[chordTypeId][interval][2];
+			a2=chordGaussTable[chordTypeId][interval][3];
+
 			d=(x-mu)/sigma;
+			//sum of 2 gaussians
 			y=a1*exp(-0.5*d*d)+a2*exp(-7*fabs(x-mu));
 		}
 		prob*=y;
@@ -168,16 +167,17 @@ float Viterbi::getMidChordProb(float *chroma, int chordTypeId, int noteNum) {
 }
 
 void Viterbi::getChordProbs(float *bassChroma, float *midChroma, float *chordProbs) {
-	int i,j;
+	int i;
 	float rootProbs[12];
 
 	normalize(midChroma,12);
 	getRootProbs(bassChroma,rootProbs);
 
-	for (i=0;i<5;i++) {
-		for (j=0;j<12;j++) {
-			chordProbs[i*12+j]=rootProbs[j]*getMidChordProb(midChroma,i,j)*chordTypeProbs[i];
-		}
+	Chord chord;
+	for (i=0;i<NUM_CHORDS;i++) {
+		chord=i;
+		//probability of chord given bass note probability, chord type probability, and treble notes chord probability
+		chordProbs[i]=rootProbs[chord.getChordRootId()]*getMidChordProb(midChroma,chord)*chordTypeProbs[chord.getChordTypeId()];
 	}
 
 	normalize(chordProbs,60);

@@ -1,22 +1,24 @@
 #ifndef VITERBI_H
 #define VITERBI_H
 
+#include "Chord.h"
 
 class Viterbi
 {
 	public:
 		Viterbi();
 		virtual ~Viterbi();
-		int viterbi(float *bassChroma, float *midChroma);
+		Chord viterbi(float *bassChroma, float *midChroma);
 	protected:
 	private:
-		float pathProbs[60];
-		int pathChordLengths[60][2];
+		//pathProbs keeps track of the prior probability that the current chord is the chord with that index
+		//stored as log of probability
+		float pathProbs[NUM_CHORDS];
 
-		float getTransProb(int chordLen, int prevChordLen);
-		bool normalize(float *chroma,int n);
+		float getTransProb(int prevChordId, int newChordId);
+		bool normalize(float *arr,int arraySize);
 		void getRootProbs(float *chroma, float *rootProbs);
-		float getMidChordProb(float *chroma, int chordTypeId, int noteNum);
+		float getMidChordProb(float *chroma, Chord chord);
 		void getChordProbs(float *bassChroma, float *midChroma, float *chordProbs);
 
 };
