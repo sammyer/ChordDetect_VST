@@ -1,0 +1,200 @@
+# depslib dependency file v1.0
+1353972847 source:c:\users\sam\documents\cpp\src\chorddetectui.cpp
+	"ChordDetectUI.h"
+
+1353972839 c:\users\sam\documents\cpp\include\chorddetectui.h
+	"vstgui.h"
+
+1353083878 source:c:\users\sam\documents\cpp\vstsdk2.4\public.sdk\source\vst2.x\audioeffect.cpp
+	"audioeffect.h"
+	"aeffeditor.h"
+	<stddef.h>
+	<stdio.h>
+	<math.h>
+
+1353083878 c:\users\sam\documents\cpp\vstsdk2.4\public.sdk\source\vst2.x\audioeffect.h
+	"pluginterfaces/vst2.x/aeffect.h"
+
+1353083878 c:\users\sam\documents\cpp\vstsdk2.4\public.sdk\source\vst2.x\aeffeditor.h
+	"audioeffectx.h"
+
+1353083878 c:\users\sam\documents\cpp\vstsdk2.4\public.sdk\source\vst2.x\audioeffectx.h
+	"audioeffect.h"
+	"pluginterfaces/vst2.x/aeffectx.h"
+
+1353083878 source:c:\users\sam\documents\cpp\vstsdk2.4\public.sdk\source\vst2.x\audioeffectx.cpp
+	"audioeffectx.h"
+	"aeffeditor.h"
+
+1353083878 source:c:\users\sam\documents\cpp\vstsdk2.4\public.sdk\source\vst2.x\vstplugmain.cpp
+	"audioeffect.h"
+	<windows.h>
+
+1353083879 c:\users\sam\documents\cpp\vstsdk2.4\vstgui.sf\vstgui\vstgui.h
+	"plugguieditor.h"
+	"aeffguieditor.h"
+	<windows.h>
+	<X11/Xlib.h>
+	<X11/Intrinsic.h>
+	<Carbon/Carbon.h>
+	<Quickdraw.h>
+	<Menus.h>
+	<Windows.h>
+	<TextUtils.h>
+	<TextEdit.h>
+	<ToolUtils.h>
+	<Resources.h>
+	<Dialogs.h>
+	<Font.h>
+	"vstcontrols.h"
+
+1353083879 c:\users\sam\documents\cpp\vstsdk2.4\vstgui.sf\vstgui\plugguieditor.h
+	"vstgui.h"
+
+1353083879 c:\users\sam\documents\cpp\vstsdk2.4\vstgui.sf\vstgui\aeffguieditor.h
+	"aeffeditor.h"
+	"vstgui.h"
+
+1355710482 c:\users\sam\documents\cpp\vstsdk2.4\vstgui.sf\vstgui\vstcontrols.h
+	"vstgui.h"
+
+1353970327 source:c:\users\sam\documents\cpp\src\chorddetect.cpp
+	"ChordDetect.h"
+	"ChordDetectUI.h"
+
+1353969795 c:\users\sam\documents\cpp\include\chorddetect.h
+	"audioeffectx.h"
+
+1353083879 source:c:\users\sam\documents\cpp\vstsdk2.4\vstgui.sf\vstgui\aeffguieditor.cpp
+	"aeffguieditor.h"
+	<mach-o/dyld.h>
+	<mach-o/ldsyms.h>
+	<CoreFoundation/CFBundle.h>
+
+1355710467 source:c:\users\sam\documents\cpp\vstsdk2.4\vstgui.sf\vstgui\vstcontrols.cpp
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<string.h>
+	"vstcontrols.h"
+	"vstkeycode.h"
+	<windows.h>
+	<Xm/Text.h>
+	<TextView.h>
+	<Window.h>
+	<Scrap.h>
+	<ctype.h>
+	<Xm/RowColumn.h>
+	<Xm/ToggleB.h>
+	<Xm/PushB.h>
+	<Xm/SeparatoG.h>
+	<PopUpMenu.h>
+	<MenuItem.h>
+
+1353083879 c:\users\sam\documents\cpp\vstsdk2.4\vstgui.sf\vstgui\vstkeycode.h
+
+1353083879 source:c:\users\sam\documents\cpp\vstsdk2.4\vstgui.sf\vstgui\vstgui.cpp
+	"vstgui.h"
+	"audioeffectx.h"
+	"vstkeycode.h"
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<string.h>
+	<stdarg.h>
+	<windows.h>
+	<shlobj.h>
+	<shellapi.h>
+	<zmouse.h>
+	<commdlg.h>
+	"png.h"
+	<X11/xpm.h>
+	<X11/Xlib.h>
+	<Xm/DrawingA.h>
+	<assert.h>
+	<Xm/MwmUtil.h>
+	<Xm/DialogS.h>
+	<time.h>
+	<sys/syssgi.h>
+	"xpmloader.cpp"
+	<QuickTime/QuickTime.h>
+	<QDOffscreen.h>
+	<StandardFile.h>
+	<Navigation.h>
+	<PictUtils.h>
+	<TranslationUtils.h>
+	<Resources.h>
+	<Bitmap.h>
+	<Region.h>
+	<View.h>
+	<Window.h>
+	<Message.h>
+	<Entry.h>
+	<Path.h>
+	"Drag.h"
+
+1361720015 source:c:\users\sam\documents\cpp\chordvst\src\chorddetectui.cpp
+	"ChordDetectUI.h"
+	<iostream>
+	<fstream>
+
+1361719633 c:\users\sam\documents\cpp\chordvst\include\chorddetectui.h
+	"vstgui.h"
+
+1361716517 source:c:\users\sam\documents\cpp\chordvst\src\chorddetect.cpp
+	"ChordDetect.h"
+	"ChordDetectUI.h"
+	<String>
+	<cmath>
+	<sstream>
+	<fstream>
+	"fft.h"
+	"PeakFinder.h"
+
+1355589772 c:\users\sam\documents\cpp\chordvst\include\chorddetect.h
+	"audioeffectx.h"
+	"fft.h"
+	"PeakFinder.h"
+	"Viterbi.h"
+	<fstream>
+
+1355501401 c:\users\sam\documents\cpp\chordvst\include\fft.h
+	<vector>
+
+1436099859 c:\users\sam\documents\cpp\chordvst\include\peakfinder.h
+	<vector>
+
+1436100224 c:\users\sam\documents\cpp\chordvst\include\viterbi.h
+	"Chord.h"
+
+1436100179 source:c:\users\sam\documents\cpp\chordvst\src\peakfinder.cpp
+	"PeakFinder.h"
+	<Math.h>
+	<algorithm>
+	<vector>
+	<cstdio>
+
+1436100212 source:c:\users\sam\documents\cpp\chordvst\src\viterbi.cpp
+	<math.h>
+	"probtables.h"
+	"Viterbi.h"
+	<cstdio>
+
+1354983526 c:\users\sam\documents\cpp\chordvst\include\probtables.h
+
+1355588115 source:c:\users\sam\documents\cpp\chordvst\src\fft.cpp
+	"fft.h"
+	<cmath>
+	<exception>
+	<cstdio>
+	<vector>
+
+1355707324 source:c:\users\sam\documents\cpp\chordvst\resources\chorddetect.rc
+
+1436095404 source:c:\users\sam\documents\cpp\chordvst\src\chord.cpp
+	"Chord.h"
+	<sstream>
+
+1436099770 c:\users\sam\documents\cpp\chordvst\include\chord.h
+	<string>
+
