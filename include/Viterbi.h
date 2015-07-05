@@ -3,6 +3,8 @@
 
 #include "Chord.h"
 
+namespace chords {
+
 class Viterbi
 {
 	public:
@@ -22,5 +24,7 @@ class Viterbi
 		void getChordProbs(float *bassChroma, float *midChroma, float *chordProbs);
 
 };
+
+}
 
 #endif // VITERBI_H

@@ -89,7 +89,8 @@ void ChordDetect::processReplacing (float** inputs, float** outputs, VstInt32 sa
 	float bassChroma[12];
 	float midChroma[12];
 	std::vector<float> spec;
-	Chord chord;
+
+	chords::Chord chord;
 
 	for (i=0;i<sampleFrames;i+=sampleIncrement) {
 		buffer[bufferWriteIdx]=inputs[0][i];

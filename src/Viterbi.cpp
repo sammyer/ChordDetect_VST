@@ -3,6 +3,7 @@
 #include "Viterbi.h"
 #include <cstdio>
 
+namespace chords {
 
 Viterbi::Viterbi()
 {
@@ -181,4 +182,6 @@ void Viterbi::getChordProbs(float *bassChroma, float *midChroma, float *chordPro
 	}
 
 	normalize(chordProbs,60);
+}
+
 }

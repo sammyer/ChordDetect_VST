@@ -1,6 +1,9 @@
 #include "Chord.h"
 #include <sstream>
 
+
+namespace chords {
+
 Chord::Chord(): rootId(0), typeId(0) {
 }
 
@@ -22,8 +25,10 @@ int Chord::getChordTypeId() {
 	return typeId;
 }
 
-string Chord::getChordName() {
-	ostringstream output;
+std::string Chord::getChordName() {
+	std::ostringstream output;
 	output << noteNames[rootId] << chordNames[typeId];
 	return output.str();
+}
+
 }

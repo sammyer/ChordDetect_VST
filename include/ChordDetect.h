@@ -5,6 +5,7 @@
 #include "fft.h"
 #include "PeakFinder.h"
 #include "Viterbi.h"
+#include "Chord.h"
 #include <fstream>
 
 class ChordDetect : public AudioEffectX {
@@ -29,8 +30,8 @@ class ChordDetect : public AudioEffectX {
 		int sampleIncrement;
 		float fftSampleRate;
 		FFT *fft;
-		PeakFinder peakFinderModule;
-		Viterbi viterbiModule;
+		chords::PeakFinder peakFinderModule;
+		chords::Viterbi viterbiModule;
 };
 
 #endif // CHORDDETECT_CPP_H

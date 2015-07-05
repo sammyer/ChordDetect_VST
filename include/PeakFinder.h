@@ -1,8 +1,10 @@
 #ifndef PEAKFINDER_H
 #define PEAKFINDER_H
+#include <vector>
+
+namespace chords {
 
 #define LOG2 0.6931471805599453
-#include <vector>
 
 struct Peak {
 	float fq; //frequency in bin index
@@ -26,5 +28,7 @@ class PeakFinder
 		void pruneMaxes(std::vector<Peak> peakArr,float semiDist,float minAmpRatio);
 		float errorPenalty(float errorAmt);
 };
+
+}
 
 #endif // PEAKFINDER_H

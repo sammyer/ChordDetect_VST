@@ -4,6 +4,8 @@
 #include <vector>
 #include <cstdio>
 
+namespace chords {
+
 PeakFinder::PeakFinder()
 {
 	//ctor
@@ -184,4 +186,6 @@ void PeakFinder::getChromas(float bassChroma[], float midChroma[],std::vector<fl
 		if (chromaId==0) bassChroma[pitchId]+=peakArr[i].amp*errorPenalty(tuningError);
 		if (chromaId==1) midChroma[pitchId]+=peakArr[i].amp*errorPenalty(tuningError);
 	}
+}
+
 }
